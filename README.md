@@ -1,3 +1,5 @@
+# AI was used very much in this project
+
 # AutoProxy
 
 AutoProxy проверяет прокси и VPN-профили, выбирает самый быстрый по скачиванию
