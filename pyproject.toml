@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autoproxy"
+version = "0.1.0"
+description = "Proxy profile health checks and failover behind a local SOCKS5 listener"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["PyYAML>=6.0.2,<7"]
+classifiers = [
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3 :: Only",
+]
+
+[project.scripts]
+autoproxy = "autoproxy.__main__:main"
+
+[tool.setuptools]
+packages = ["autoproxy"]
+
+[tool.setuptools.data-files]
+"share/autoproxy" = ["autoproxy.example.json"]

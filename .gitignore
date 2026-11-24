@@ -1,0 +1,7 @@
+__pycache__/
+.venv/
+autoproxy.json
+profiles/
+build/
+dist/
+*.egg-info/
