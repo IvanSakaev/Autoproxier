@@ -4,6 +4,7 @@ import asyncio
 import configparser
 import contextlib
 import logging
+import os
 from dataclasses import dataclass
 
 import yaml
@@ -205,17 +206,22 @@ class AutoProxy:
     async def load_profiles(self):
         found = {}
         for index, path in enumerate(self.settings.profiles, 1):
-            try:
-                profiles = await asyncio.to_thread(local_profiles, path)
-            except SOURCE_ERRORS as e:
-                LOG.warning("Local source %s: unable to read or parse; using previous nodes", index)
-                LOG.warning("Error was: %s", type(e).__name__+": "+str(e))
-                profiles = self.source_cache.get(path, [])
-            else:
-                self.source_cache[path] = profiles
-                if not profiles:
-                    LOG.warning("Local source %s: no supported standalone profiles", index)
-            found.update((profile.key, profile) for profile in profiles)
+            subpaths = [path]
+            if path.is_dir():
+                subpaths = list(path.iterdir())
+
+            for index2, path2 in enumerate(subpaths, 1):
+                try:
+                    profiles = await asyncio.to_thread(local_profiles, path2)
+                except SOURCE_ERRORS as e:
+                    LOG.warning("Local source %s/%s: unable to read or parse; using previous nodes", index, index2)
+                    LOG.warning("Error was: %s", type(e).__name__+": "+str(e))
+                    profiles = self.source_cache.get(path2, [])
+                else:
+                    self.source_cache[path2] = profiles
+                    if not profiles:
+                        LOG.warning("Local source %s/%s: no supported standalone profiles", index, index2)
+                found.update((profile.key, profile) for profile in profiles)
 
         limiter = asyncio.Semaphore(self.settings.concurrency)
 
