@@ -207,8 +207,9 @@ class AutoProxy:
         for index, path in enumerate(self.settings.profiles, 1):
             try:
                 profiles = await asyncio.to_thread(local_profiles, path)
-            except SOURCE_ERRORS:
+            except SOURCE_ERRORS as e:
                 LOG.warning("Local source %s: unable to read or parse; using previous nodes", index)
+                LOG.warning("Error was: %s", type(e).__name__+": "+str(e))
                 profiles = self.source_cache.get(path, [])
             else:
                 self.source_cache[path] = profiles
