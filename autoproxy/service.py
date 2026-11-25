@@ -9,7 +9,7 @@ from dataclasses import dataclass
 import yaml
 
 from .network import (
-    FAILURE, LOOPBACK, Core, SocksError, address_bytes, close_writer, connect_core,
+    FAILURE, Core, SocksError, address_bytes, close_writer, connect_core,
     fetch_subscription, https_probe, relay, request_core, speed_probe, tcp_probe,
     tunnel_probe,
 )
@@ -402,9 +402,9 @@ class AutoProxy:
                     self.recovery_done.set()
 
     async def run(self, stop):
-        listener = await asyncio.start_server(self.client, LOOPBACK, self.settings.listen_port)
+        listener = await asyncio.start_server(self.client, self.settings.listen_host, self.settings.listen_port)
         async with listener:
-            LOG.info("SOCKS5 listening on %s:%s", LOOPBACK, self.settings.listen_port)
+            LOG.info("SOCKS5 listening on %s:%s", self.settings.listen_host, self.settings.listen_port)
             try:
                 async with asyncio.TaskGroup() as group:
                     tasks = [group.create_task(self.scan_loop()), group.create_task(self.health_loop())]

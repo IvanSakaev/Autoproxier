@@ -1,6 +1,7 @@
 {
   "profiles": ["profiles/vless.json", "profiles/amneziawg.conf"],
   "subscriptions": ["https://example.com/subscription"],
+  "listen_host": "127.0.0.1",
   "listen_port": 1080,
   "scan_interval": 1800,
   "health_interval": 5,
