@@ -41,6 +41,7 @@ def url(value, schemes):
 class Settings:
     profiles: tuple[Path, ...] = ()
     subscriptions: tuple[str, ...] = field(default=(), repr=False)
+    listen_host: str = "127.0.0.1"
     listen_port: int = 1080
     scan_interval: float = 1800.0
     health_interval: float = 5.0
